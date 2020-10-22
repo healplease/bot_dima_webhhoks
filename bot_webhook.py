@@ -41,6 +41,8 @@ def _(message):
     except AttributeError:
         pass
 
+    words = []
+
     if not message.text.lower().startswith('дим') and message.chat.type != 'private':
         pass
 
