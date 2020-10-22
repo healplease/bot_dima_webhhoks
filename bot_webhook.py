@@ -44,7 +44,7 @@ def _(message):
     words = []
 
     if not message.text.lower().startswith('дим') and message.chat.type != 'private':
-        pass
+        return
 
     elif message.text.lower().startswith('дим') and message.chat.type != 'private':
         words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()[1:]))
@@ -55,7 +55,9 @@ def _(message):
     if not words:
         answer = model.make_sentence()
     
-    answer = generate_answer(message.chat.id, words)
+    else:
+        answer = generate_answer(message.chat.id, words)
+
     print(f'answer to {message.chat.username}: {answer}')
     bot.send_message(message.chat.id, answer)
     return
