@@ -16,7 +16,8 @@ TOKEN = '877244637:AAE9Lb-xRSB26BM4vS8j8cxeWxpKrb3eYB4'
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-model = markovify.NewlineText('user.txt')
+with open('user.txt', 'r', encoding='utf-8') as f:
+    model = markovify.NewlineText(f.read())
 
 def generate_answer(chat_id, words):
     answer = ''
@@ -41,7 +42,7 @@ def _(message):
         pass
 
     if not message.text.lower().startswith('дим') and message.chat.type != 'private':
-        return
+        pass
 
     elif message.text.lower().startswith('дим') and message.chat.type != 'private':
         words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()[1:]))
