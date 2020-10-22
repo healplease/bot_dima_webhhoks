@@ -16,9 +16,7 @@ TOKEN = '877244637:AAE9Lb-xRSB26BM4vS8j8cxeWxpKrb3eYB4'
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-with zipfile.ZipFile('user.zip') as archive:
-    with archive.open('user.json', 'r') as f:
-        model = markovify.Text.from_json(f.read().decode("utf-8"))
+model = markovify.NewlineText('user.txt')
 
 def generate_answer(chat_id, words):
     answer = ''
@@ -62,16 +60,16 @@ def _(message):
 
 @app.route('/' + TOKEN, methods=['POST'])
 def getMessage():
-    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-    return "!", 200
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode('utf-8'))])
+    return '!', 200
 
 
-@app.route("/")
+@app.route('/')
 def webhook():
     bot.remove_webhook()
     bot.set_webhook(url='https://dimasik-bot.herokuapp.com/' + TOKEN)
-    return "!", 200
+    return '!', 200
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(host=socket.gethostbyname(socket.gethostname()))
