@@ -35,7 +35,7 @@ def generate_answer(chat_id, words):
 
 def generate_story(chat_id, words):
     sentences = random.randint(6, 12)
-    story = f'**{words.capitalize()}:**\n\n'
+    story = f'<b>{words.capitalize()}:</b>\n\n'
     last_sentence = model.make_sentence().capitalize() + '. '
     for _ in range(sentences):
         #bot.send_chat_action(chat_id, 'typing')
@@ -45,6 +45,8 @@ def generate_story(chat_id, words):
             last_sentence = model.make_sentence_with_start(random.choice(words), strict=False).capitalize().strip('?!')  + random.choice('?!.....') + ' '
         except AttributeError:
             last_sentence = model.make_sentence() + '. '
+
+    story = story + '\n\n<i>Вывод: ' + model.make_sentence() + '.</i>'
     return story
 
 @bot.message_handler(content_types=['text'])
@@ -84,7 +86,7 @@ def _(message):
 
 
         print(f'answer to {message.chat.username}: {answer}')
-        bot.send_message(message.chat.id, answer)
+        bot.send_message(message.chat.id, answer, parse_mode='HTML')
         return
     
     except Exception as e:
