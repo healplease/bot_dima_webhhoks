@@ -50,41 +50,46 @@ def generate_story(chat_id, words):
 @bot.message_handler(content_types=['text'])
 def _(message):
     try:
-        print(f'({message.chat.type})[{message.message_id}] {message.chat.username}: {message.text}')
-    except AttributeError:
-        pass
+        try:
+            print(f'({message.chat.type})[{message.message_id}] {message.chat.username}: {message.text}')
+        except AttributeError:
+            pass
 
-    words = []
+        words = []
 
-    if not message.text.lower().startswith('дим') and message.chat.type != 'private':
+        if not message.text.lower().startswith('дим') and message.chat.type != 'private':
+            return
+
+        elif message.text.lower().startswith('дим') and message.chat.type != 'private':
+            words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()[1:]))
+
+        elif message.chat.type == 'private':
+            words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()))
+        
+        if not words:
+            answer = model.make_sentence()
+        
+        else:
+            answer = generate_answer(message.chat.id, words)
+
+        if 'скажи' in message.text.lower():
+            words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()))
+            w = 0
+            for i in range(len(words)):
+                if 'скажи' in words[i]:
+                    w = i
+            words = words[w:]
+
+            answer = generate_story(message.chat.id, words)
+
+
+        print(f'answer to {message.chat.username}: {answer}')
+        bot.send_message(message.chat.id, answer)
         return
-
-    elif message.text.lower().startswith('дим') and message.chat.type != 'private':
-        words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()[1:]))
-
-    elif message.chat.type == 'private':
-        words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()))
     
-    if not words:
-        answer = model.make_sentence()
-    
-    else:
-        answer = generate_answer(message.chat.id, words)
-
-    if 'скажи' in message.text.lower():
-        words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()))
-        w = 0
-        for i in range(len(words)):
-            if 'скажи' in words[i]:
-                w = i
-        words = words[w:]
-
-        answer = generate_story(message.chat.id, words)
-
-
-    print(f'answer to {message.chat.username}: {answer}')
-    bot.send_message(message.chat.id, answer)
-    return
+    except Exception as e:
+        if message.chat.username = 'healplease':
+            bot.send_message(e.with_traceback())
 
 
 @app.route('/' + TOKEN, methods=['POST'])
