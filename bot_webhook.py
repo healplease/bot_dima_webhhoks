@@ -88,8 +88,9 @@ def _(message):
         return
     
     except Exception as e:
-        if message.chat.username = 'healplease':
-            bot.send_message(e.with_traceback())
+        if getattr(message.chat, 'username', None):
+            if message.chat.username == 'healplease':
+                bot.send_message(message.chat.id, e.with_traceback())
 
 
 @app.route('/' + TOKEN, methods=['POST'])
