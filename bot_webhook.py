@@ -33,6 +33,19 @@ def generate_answer(chat_id, words):
 
     return answer
 
+def generate_story(chat_id, words):
+    sentences = random.randint(6, 12)
+    story = f'**{words.capitalize()}:**\n\n'
+    last_sentence = model.make_sentence().capitalize() + '. '
+    for _ in range(sentences):
+        #bot.send_chat_action(chat_id, 'typing')
+        story += last_sentence
+        words = list(map(lambda x: x.strip(string.punctuation).lower(), last_sentence.split()))
+        try:
+            last_sentence = model.make_sentence_with_start(random.choice(words), strict=False).capitalize().strip('?!')  + random.choice('?!.....') + ' '
+        except AttributeError:
+            last_sentence = model.make_sentence() + '. '
+    return story
 
 @bot.message_handler(content_types=['text'])
 def _(message):
@@ -57,6 +70,17 @@ def _(message):
     
     else:
         answer = generate_answer(message.chat.id, words)
+
+    if 'скажи' in message.text.lower():
+        words = list(map(lambda x: x.strip(string.punctuation), message.text.lower().split()))
+        w = 0
+        for i in range(len(words)):
+            if 'скажи' in words[i]:
+                w = i
+        words = words[w:]
+
+        answer = generate_story(chat_id, words)
+
 
     print(f'answer to {message.chat.username}: {answer}')
     bot.send_message(message.chat.id, answer)
