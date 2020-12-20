@@ -41,7 +41,7 @@ def generate_story(chat_id, words):
         #bot.send_chat_action(chat_id, 'typing')
         story += last_sentence
         words = list(map(lambda x: x.strip(string.punctuation).lower(), last_sentence.split()))
-        last_sentence = model.make_sentence() + '. '
+        last_sentence = model.make_sentence().capitalize() + '. '
 
     story = story + '\n\n<i>Вывод: ' + model.make_sentence() + '.</i>'
     return story
