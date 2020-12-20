@@ -41,10 +41,7 @@ def generate_story(chat_id, words):
         #bot.send_chat_action(chat_id, 'typing')
         story += last_sentence
         words = list(map(lambda x: x.strip(string.punctuation).lower(), last_sentence.split()))
-        try:
-            last_sentence = model.make_sentence_with_start(random.choice(words), strict=False).capitalize().strip('?!')  + random.choice('?!.....') + ' '
-        except AttributeError:
-            last_sentence = model.make_sentence() + '. '
+        last_sentence = model.make_sentence() + '. '
 
     story = story + '\n\n<i>Вывод: ' + model.make_sentence() + '.</i>'
     return story
