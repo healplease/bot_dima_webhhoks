@@ -80,7 +80,7 @@ def _(message):
                     w = i
             words = words[w:]
 
-            answer = generate_story(message.chat.id, words)
+            answer = generate_story(message.chat.id, ' '.join(words))
 
 
         print(f'answer to {message.chat.username}: {answer}')
